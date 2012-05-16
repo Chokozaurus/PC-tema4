@@ -1,0 +1,11 @@
+Tudorica Constantin-Alexandru, 323CA
+
+Am setat un timeout de 5 secunde folosind select.
+Am folosit connect si functiile send si recv.
+Incerc pe rand serverele de dns din fisierul de configurare,
+daca unul nu merge printez mesaje de eroare catre stderr.
+Ca sa obtin ip-ul inversat pentru un request PTR l-am
+memorat pe 32 de biti apoi am folosit ntohl ca sa il inversez
+si apoi l-am convertit din nou in string.
+Folosesc o variabila globala len pentru a tine minte unde am 
+ajuns din citirea pachetului.
