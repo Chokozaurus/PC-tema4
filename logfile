@@ -1,0 +1,24 @@
+; Trying: google.com NS
+
+;; ANSWER SECTION:
+google.com.	IN	NS	ns4.google.com.
+google.com.	IN	NS	ns1.google.com.
+google.com.	IN	NS	ns2.google.com.
+google.com.	IN	NS	ns3.google.com.
+;; ADDITIONAL SECTION:
+ns1.google.com.	IN	A	216.239.32.10
+ns2.google.com.	IN	A	216.239.34.10
+ns3.google.com.	IN	A	216.239.36.10
+ns4.google.com.	IN	A	216.239.38.10
+; Trying: 209.92.24.80 PTR
+
+;; ANSWER SECTION:
+80.24.92.209.in-addr.arpa.	IN	PTR	iqc80.iqnection.com.
+;; AUTHORITY SECTION:
+92.209.in-addr.arpa.	IN	NS	ns3.paetec.net.
+92.209.in-addr.arpa.	IN	NS	ns1.paetec.net.
+92.209.in-addr.arpa.	IN	NS	ns2.paetec.net.
+;; ADDITIONAL SECTION:
+ns1.paetec.net.	IN	A	66.155.216.121
+ns2.paetec.net.	IN	A	207.59.153.241
+ns3.paetec.net.	IN	A	66.251.35.129
