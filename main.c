@@ -18,7 +18,7 @@
 
 #include <sys/select.h>
 #include <sys/time.h>
-
+#pragma pack(push,1)
 #include "dns_message.h"
 unsigned int len = 0;
 
@@ -83,11 +83,12 @@ int main( int argc, char * argv[])
 		printf("You don't have a dns_servers.conf file.\n");
 		return 0;
 	}
+
 	freopen("logfile","a", stdout);
 	printf( "; Trying: %s %s\n\n", argv[1], argv[2]);
 	memset(send_buff, 0, sizeof(send_buff));
 
-	//TODO: Check if connection matters
+
 
 	dns_header_t req;
 	memset(&req, 0,  sizeof(dns_header_t));
@@ -98,24 +99,27 @@ int main( int argc, char * argv[])
 	req.qdcount = htons(1);
 	memcpy(send_buff, &req, sizeof(dns_header_t));
 	len += sizeof(dns_header_t);
-	//send(nsock, &req, sizeof(req), 0);
+
 
 	char buff[255];
 	memset(buff, 0, sizeof(buff));
 	char host[255];
 	if (strcmp("PTR", argv[2])==0)
 	{
+		//Ma folosesc de ntohl ca sa inversez IP-ul
 		struct in_addr temp;
 		inet_aton(argv[1], &temp);
 		unsigned int t = ntohl(*(unsigned int*)&temp);
 		temp = *(struct in_addr*)&t;
 
-		fprintf(stderr,"%s.in-addr.arpa\n",inet_ntoa(temp) );
+
 
 		sprintf(host,"%s.in-addr.arpa",inet_ntoa(temp) );
 		memcpy(buff+1, host, sizeof(char) * strlen(host));
 	} else
-		memcpy(buff+1, argv[1], sizeof(char) * strlen(argv[1]));
+		memcpy(buff+1, argv[1], sizeof(char) * strlen(argv[1])); //Altfel doar copiez parametrul
+
+	//Creez un label
 	buff[0] = '.';
 	int l = strlen(buff);
 	char cnt = 0;
@@ -125,6 +129,8 @@ int main( int argc, char * argv[])
 			buff[i] = cnt, cnt = 0;
 		else
 			++cnt;
+
+	//Setez tipul
 	short int type;
 	if (strcmp("A", argv[2]) == 0)
 		type = htons(A);
@@ -138,14 +144,14 @@ int main( int argc, char * argv[])
 				type = htons(PTR);
 	short int class = htons(1); //IN
 
-	memcpy(send_buff+len, buff, l+1);
+	memcpy(send_buff+len, buff, l+1); //Label
 	len+=l+1;
-	memcpy(send_buff+len, &type, 2);
+	memcpy(send_buff+len, &type, 2);  //Type
 	len+=2;
-	memcpy(send_buff+len, &class, 2);
+	memcpy(send_buff+len, &class, 2); //Class
 	len+=2;
 
-	//Need to fork it here for every dns server in the order they appear in the file
+
 	//Trimitem pachetul
 	struct sockaddr_in serv_addr;
 	char dns_server[256];
@@ -162,9 +168,9 @@ int main( int argc, char * argv[])
 		inet_aton(dns_server, &serv_addr.sin_addr);
 		int nsock = socket(AF_INET,SOCK_DGRAM,0);
 		if (nsock < 0)
-				error("ERROR opening socket");
+				perror("ERROR opening socket");
 		if (connect(nsock,(struct sockaddr*) &serv_addr,sizeof(serv_addr)) < 0)
-					error("ERROR connecting");
+					perror("ERROR connecting");
 		send(nsock, &send_buff, len, 0);
 		fd_set rfds;
 		struct timeval tv;
@@ -202,14 +208,13 @@ int main( int argc, char * argv[])
 		count[2] = ntohs(res.arcount);
 
 
-		//Citim query-urile
-		//int i;
-		for (i = 0; i < 3; ++ i)
+
+		for (i = 0; i < 3; ++ i) //Pentru fiecare sectiune
 		{
 			if (count[i])
 				printf(";; %s:\n", section_name[i]);
 
-			while (count[i]--)
+			while (count[i]--) //Pentru fiecare record din sectiune
 			{
 				char * label = get_label(read_buff, len);
 				dns_rr_t op;
@@ -224,19 +229,19 @@ int main( int argc, char * argv[])
 				unsigned int len_after = len+op.rdlength;
 				switch (op.type)
 				{
-					case 1: {
+					case 1: { //A
 						printf( "%s\tIN\tA\t%hhu.%hhu.%hhu.%hhu\n",label,  read_buff[len], read_buff[len+1], read_buff[len+2], read_buff[len+3] );
 						break;
 					}
-					case 5:
-					case 12:
-					case 2: {
+					case 5:   //CNAME
+					case 12:  //PTR
+					case 2: { //NS
 						char * ns_label  = get_label(read_buff,len);
 						printf( "%s\tIN\t%s\t%s\n", label,get_type(op.type), ns_label );
 						free(ns_label);
 						break;
 					}
-					case 15: {
+					case 15: { //MX
 						unsigned short pref;
 						memcpy(&pref, read_buff+len, 2);
 						len+=2;
@@ -254,8 +259,9 @@ int main( int argc, char * argv[])
 
 		}
 		close(nsock);
-		break;
-		//Tot ce mai ramane sunt doar raspunsurile la query
+		break; //Nu mai incercam si celelalte dns-uri
+
 	}
 	return 0;
 }
+#pragma pack(pop)

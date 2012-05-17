@@ -1,6 +1,7 @@
 Tudorica Constantin-Alexandru, 323CA
 
-Am setat un timeout de 5 secunde folosind select.
+Am setat un timeout de 5 secunde folosind select si verific
+rcode sa vad daca am primit vre-o eroare.
 Am folosit connect si functiile send si recv.
 Incerc pe rand serverele de dns din fisierul de configurare,
 daca unul nu merge printez mesaje de eroare catre stderr.
@@ -9,3 +10,6 @@ memorat pe 32 de biti apoi am folosit ntohl ca sa il inversez
 si apoi l-am convertit din nou in string.
 Folosesc o variabila globala len pentru a tine minte unde am 
 ajuns din citirea pachetului.
+Celealte tipuri de recorduri le ignor. Ma folosesc de rlength
+ca sa le skip-ui.
+Mod de apelare ./tema4 google.com MX

@@ -22,3 +22,45 @@ ns4.google.com.	IN	A	216.239.38.10
 ns1.paetec.net.	IN	A	66.155.216.121
 ns2.paetec.net.	IN	A	207.59.153.241
 ns3.paetec.net.	IN	A	66.251.35.129
+; Trying: tudalex.com NS
+
+;; ANSWER SECTION:
+tudalex.com.	IN	NS	erin.ns.cloudflare.com.
+tudalex.com.	IN	NS	jake.ns.cloudflare.com.
+;; ADDITIONAL SECTION:
+erin.ns.cloudflare.com.	IN	A	173.245.58.113
+jake.ns.cloudflare.com.	IN	A	173.245.59.122
+; Trying: tudalex.com A
+
+;; ANSWER SECTION:
+tudalex.com.	IN	A	173.245.61.39
+tudalex.com.	IN	A	173.245.61.111
+;; AUTHORITY SECTION:
+tudalex.com.	IN	NS	erin.ns.cloudflare.com.
+tudalex.com.	IN	NS	jake.ns.cloudflare.com.
+;; ADDITIONAL SECTION:
+erin.ns.cloudflare.com.	IN	A	173.245.58.113
+jake.ns.cloudflare.com.	IN	A	173.245.59.122
+; Trying: google.com MX
+
+;; ANSWER SECTION:
+google.com.	IN	MX	20	alt1.aspmx.l.google.com.
+google.com.	IN	MX	30	alt2.aspmx.l.google.com.
+google.com.	IN	MX	40	alt3.aspmx.l.google.com.
+google.com.	IN	MX	50	alt4.aspmx.l.google.com.
+google.com.	IN	MX	10	aspmx.l.google.com.
+;; AUTHORITY SECTION:
+google.com.	IN	NS	ns4.google.com.
+google.com.	IN	NS	ns1.google.com.
+google.com.	IN	NS	ns2.google.com.
+google.com.	IN	NS	ns3.google.com.
+;; ADDITIONAL SECTION:
+aspmx.l.google.com.	IN	A	173.194.70.27
+alt1.aspmx.l.google.com.	IN	A	173.194.71.27
+alt2.aspmx.l.google.com.	IN	A	74.125.127.26
+alt3.aspmx.l.google.com.	IN	A	173.194.77.27
+alt4.aspmx.l.google.com.	IN	A	209.85.225.27
+ns1.google.com.	IN	A	216.239.32.10
+ns2.google.com.	IN	A	216.239.34.10
+ns3.google.com.	IN	A	216.239.36.10
+ns4.google.com.	IN	A	216.239.38.10
